@@ -1,0 +1,365 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bstree;
+import java.lang.Math;
+import java.util.Stack;
+import java.util.Queue;
+import java.util.LinkedList;
+
+/**
+ *
+ * @author hanxi
+ */
+
+
+class TNode<E>{//create a node
+      int element;
+      TNode<E> left;
+      TNode<E> right;
+     public  TNode(int i,TNode l,TNode r)
+      {
+          element=i;
+          left=l;
+          right=r;
+      }
+  }
+public class BSTree<E> {
+
+
+    private TNode<E> root;
+    
+    ///////constructor
+    public BSTree()//empty
+    {
+        root=null;
+    }
+    
+    public BSTree(int[] sortedInput)
+    {
+        int start=0;
+        int end = sortedInput.length-1;
+        root=create(sortedInput, start, end);
+      
+    }
+   
+    public TNode create(int[] array, int s, int e)
+    {
+        if(s>e) return null;
+        int mid=(s+e)/2;
+        TNode n=new TNode(array[mid],null,null);
+        n.left =create(array, s, mid-1);
+        n.right=create(array,mid+1,e);
+        return n;
+    
+    }
+
+    
+    public boolean isIn(int v)
+    {
+       TNode key=root;//start from root
+       while(key!=null)
+       {
+        if(key.element>v)
+        {
+          key=key.left;
+        }
+        else if(key.element<v)
+        {
+          key=key.right;  
+        }
+        else//equal
+            return true;
+       }
+       return false;
+      
+    }
+    
+    public void add(int v)
+    {
+        if(root==null)//the 1st element in the tree
+        {
+            root=new TNode<E>(v,null,null);
+        }
+        else
+        {
+            if(isIn(v)==false)//not in the bst
+           {
+           TNode key=root;
+           while(key!=null)
+           {
+             if(v>key.element)
+             {
+                 if(key.right==null)//if leaf
+                 {
+                     key.right=new TNode<E>(v,null,null);//add in the last pos
+                 }
+                 else key=key.right;//right side
+                 
+             }
+             else if(v<key.element)
+             {
+                 if(key.left==null)
+                 {
+                     key.left=new TNode<E>(v,null,null);
+                 }
+                 else key=key.left;
+             }
+             else return;
+             
+             
+           }//end while
+           }//end if
+        }//end else
+    }//end add
+    
+public void remove(int v)
+{
+   remove(v,root); 
+}
+private TNode<E> remove(int val,TNode<E> t)
+{
+   /* if(t==null)
+    {
+        //System.out.println("empty");
+        t=new TNode(val,null,null);
+    }//or delete this part  */
+    if (val<t.element)
+        t.left=remove(val,t.left);
+    else if(val>t.element)
+        t.right=remove(val,t.right);
+    else if(t.left!=null&&t.right!=null)//delete node with 2 children
+    {
+        t.element=(findMin(t.right)).element;//find min starting at right sub tree
+        t.right=removeMin(t.right);//delete node with at most 1 child
+    }
+    else
+        t=(t.left!=null)?t.left:t.right;
+    return t;
+        
+}
+//    public void remove(int v)
+//    {
+//        BSTree temp=new BSTree();
+//        TNode key=root;
+//        if(root==null)
+//        {
+//            System.out.println("empty");
+//        }
+//        else
+//        {
+//            
+//            if(isIn(v)==true)
+//            {
+//              while(v!=key.element)
+//              {
+//                  if(v<key.element)//find position
+//                  {
+//                      key=key.left;
+//                  }
+//                  else if(v>key.element)
+//                  {
+//                      key=key.right;
+//                  }
+//              }//end while
+//              
+//              if(key.left==null&&key.right==null)//case 1: the v in the leaf
+//              {
+//                 key=null;//delete: change the leaf to null   
+//              }
+//              else if(key.left==null||key.right==null)//case 2:the v has only one child
+//              {
+//                  if(key.left==null)
+//                  {
+//                      key=key.right;
+//                  }
+//                  else
+//                  {
+//                      key=key.left;
+//                  } 
+//              }
+//              else //case3: 2 children.....................if(key.left!=null&&key.right!=null)
+//              {
+//                  temp.root=key.right;//start at right
+//                  //temp//Find min starting at right child
+//                  int min=temp.findMin();
+//                  //key.right=removeMin(min);//Routine which removes min value
+//              }
+//            }
+//            
+//        }
+//    }
+
+//    public int removeMin()
+//    {
+//        TNode t=root;
+//        if(t.left!=null)
+//        {
+//            t=t.left;
+//            return t.element;
+//        }
+//        else return t.right.element;
+//    }
+private TNode<E> findMin(TNode<E> t)
+{
+    //t=root;
+    if(t.left!=null)
+    {
+        t=t.left;
+    }
+    return t;
+}
+        
+        
+        
+//    public int findMin()
+//    {
+////        TNode min=root;
+////        if(min.left!=null)
+////        {
+////            min=min.left;
+////        }
+//        TNode min=root;
+//        findMin(min);
+//        return min.element;
+//    }
+    public TNode<E> removeMin(TNode<E> t)
+    {
+//        if(t==null)
+//            t=new TNode(t.element,null,null);
+        if(t.left!=null)
+        {
+            t.left=removeMin(t.left);
+            return t;
+        }
+        else 
+            return t.right;
+    }
+    
+    public int size()//return the number of int in the bst
+    {
+        return (size(root));
+    }
+    private int size(TNode node)
+    {
+        if(node==null) return 0;
+        else
+        {
+            return (size(node.left)+1+size(node.right));//stackoverflow.com/questions/19166510/size-method-for-binary-trees
+            
+        }
+    }
+    public int height()
+    {
+       if(this.size()==0)
+       {
+          return 0; 
+       }
+       else 
+       {
+           TNode node =root;
+           return height(node);
+           
+       }
+    }
+    private int height(TNode node)
+    {
+        if(node==null)  return -1;
+        int heightleft=height(node.left);
+        int heightright=height(node.right);
+        
+        {
+//            return 1+Math.max(height(node.left),height(node.right));
+            if(heightleft>heightright)
+                return heightleft+1;
+            else
+                return heightright+1;
+        }
+    }
+    
+    private void printRec(TNode t)
+    {
+        if(t!=null)
+        {
+            printRec(t.left);
+            System.out.println(""+t.element+",");
+            printRec(t.right);
+        }
+    }
+    public void printRec()////recursion
+    {
+       if(root==null)
+       {
+           System.out.println("empty");
+       }
+       else
+       {
+           System.out.println("the array contains:  ");
+           printRec(root);
+           System.out.println("\n");
+       }
+    }
+    
+    public void printNonRec()//LIFO
+    {
+       TNode key=root;
+       Stack<TNode> stack=new Stack<TNode>();//create stack
+       while(key!=null)
+       {
+           stack.push(key);
+           key=key.left;
+       }
+       while(stack.size()>0)//no finish
+       {
+          key=stack.pop();//1 2
+          System.out.println(key.element+"");
+          if(key.right!=null)//porint to 3
+          {
+              key=key.right;//move to right-sub tree
+              while(key!=null)//in right sub, if there's more number
+              {//push 3
+                 stack.push(key);
+                 key=key.left;//check left sub tree
+              }
+          }
+           
+       }
+    }
+    
+//   public boolean isFull()
+//   {
+//       return (this.size()==)
+//   }
+//   public void enqueue(E e)throws FullQueueException
+//   {
+//       if(this.size())
+//   }
+//    
+    public void printLevelOrder()//FIFO
+    {
+        if(root==null)
+           return;
+        
+       TNode visit=root;
+       Queue<TNode> q=new LinkedList<TNode>();
+
+       q.offer(visit);//enqueue method
+       
+       while(q.isEmpty()!=true)
+       {
+           visit=q.poll();//dequeue method
+           System.out.println(visit.element);
+           if(visit.left!=null)
+               q.offer(visit.left);//if they have children, enqueue
+           if(visit.right!=null)
+               q.offer(visit.right);
+          
+       }
+       
+        
+    }
+    
+    
+}

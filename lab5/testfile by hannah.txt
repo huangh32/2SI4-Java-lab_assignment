@@ -1,0 +1,98 @@
+package bstree;
+
+public class testclass {
+    public static void main(String[] args)
+    {
+        int[] a={1,2,3,4};
+        int[] b = {5, 6, 5, 1, 2, 2, 4, 0, 20, 32, 3, 17};
+	int[] c = {1,2,3,4,5,6,7};
+	int[] d = {7, 1, 10, 12, 19, 21};
+	int[] e = {21, 11, 17, 30};
+        System.out.println("test1-------using recursive method to constructor No1");
+        BSTree t1=new BSTree(a);
+        t1.printRec();
+        System.out.println("\n");
+        
+        System.out.println("test2--------using recursive method tounsorted array with repetition");
+        BSTree t2=new BSTree(b);
+        t2.printRec();
+        System.out.println("\n");
+        
+        System.out.println("test3-------using NONrecursive method to sorted array");
+        BSTree t3=new BSTree(a);
+        t3.printNonRec();
+        System.out.println("\n");
+        
+        System.out.println("test4--------using Nonrecursive method to unsorted array with repetition");
+        BSTree t4=new BSTree(b);
+        t4.printNonRec();
+        System.out.println("\n");
+        
+        System.out.println("test5--------test isIn(),the # is in the array");
+        BSTree t5=new BSTree(a);
+        System.out.println(t5.isIn(1));
+        System.out.println("\n");
+        
+        System.out.println("test6--------test isIn(),the # is NOT in the array");
+        BSTree t6=new BSTree(a);
+        System.out.println(t5.isIn(9));
+        System.out.println("\n");
+        
+        System.out.println("test7--------test add(2),the # is in the array");
+        BSTree t7=new BSTree(c);
+        System.out.println("before");
+        t7.printRec();
+        t7.add(2);
+        System.out.println("after");
+        t7.printRec();
+        System.out.println("\n");
+        
+        System.out.println("test8--------test add(32),the # is not in the array");
+        BSTree t8=new BSTree(c);
+        System.out.println("before");
+        t8.printRec();
+        
+        t8.add(32);
+        System.out.println("after");
+        t8.printRec();
+        System.out.println("\n");
+        
+        System.out.println("test9--------test remove(9),the # is not in the array");
+        BSTree t9=new BSTree(c);
+        System.out.println("before");
+        t9.printRec();
+        
+        t9.remove(9);
+        System.out.println("after");
+        t9.printRec();
+        System.out.println("\n");
+        
+        
+       System.out.println("test10--------test remove(1),the # is in the array");
+        BSTree t10=new BSTree(e);
+        System.out.println("before");
+        t10.printRec();
+        
+        t10.remove(30);
+        System.out.println("after");
+        t10.printRec();
+        System.out.println("\n");
+        
+         System.out.println("test11--------test size of array d");
+        BSTree t11=new BSTree(d);
+        
+        System.out.println("size is: "+t11.size());
+                
+        
+        System.out.println("test12--------test height of array b");
+        BSTree t12=new BSTree(b);
+        
+        System.out.println("height is: "+t12.height());
+        
+        System.out.println("test13---------test in level order");
+        BSTree t13=new BSTree(e);
+        t13.printLevelOrder();
+        //System.out.println("height is: "+t13.printLevelOrder());
+    }
+    
+}

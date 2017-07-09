@@ -1,0 +1,297 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package wordlinkedlist;
+import java.lang.String;
+//import java.util.LinkedList;
+/**
+ *
+ * @author hanxi
+ */
+class Node<E>//create a node contains two blocks
+{
+    String element;
+    Node<E> next;
+    
+    public Node(String e, Node<E> n)
+    {
+        element=e;
+        next=n;
+    }
+    
+}
+public class WordLinkedList <E>
+{
+     private int size;//number of words
+     private Node<E> head;//beginning of the list
+
+  ///constructor
+     public WordLinkedList()//an empty list with header
+     {
+         head=new Node<E>(null,null);
+     }
+     
+     public WordLinkedList(String[] arrayOfWords)
+     {
+        int i;
+        size=0;
+        int length=arrayOfWords.length;
+        head=new Node<E>(null,null);
+        for(i=0;i<length;i++)
+        {
+            this.insert(arrayOfWords[i]);
+        }
+     }
+     ////method----------------------------------------------
+     public int getSize()
+     {
+         return size;
+     }
+    
+     public String getWordAt(int i) throws IndexOutOfBoundsException
+     {
+         int j;
+         int cnt=0;
+         Node word=head;
+         if(i<size&&i>=0)
+         {
+              while(word.next!=null)
+             {
+               word=word.next;
+               cnt++;
+               if(cnt-1==i)
+               {
+                   break;
+               }
+              
+              }
+               return word.element;//????
+         }
+         else 
+         {
+             throw new ArrayIndexOutOfBoundsException("Invalid operation");//the statement must be same as test file
+         
+             }
+         
+     }
+     public void insert(String newword)
+     {
+        
+        if(find(newword)==-1)//the word is not in the list
+        {
+            Node f=head;
+            if(size==0)//case one: addFirst
+            {
+                Node<E> p=new Node<E>(newword,null);
+                head.next=p;
+                size++;
+            }
+            else
+            {
+                for(f=head;f.next!=null;f=f.next)
+                {
+                    if(f.next.element.compareTo(newword)<0)//f is smaller than newword
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        if(f.next!=null)//case 2: insert in the middle
+                        {
+                            Node<E> a=new Node<E>(newword,f.next);
+                            f.next=a;
+                            size++;
+                            return;
+                        }                                                                           
+                    }
+                }
+                                        
+                            f.next=new Node<E>(newword,null);
+                            size++;
+                            
+                            
+                        
+            }
+           // size++;
+        
+        }
+     }
+     
+     
+     
+     public int find(String word)
+     {
+         Node key=head;
+         int i=0;
+         if(size!=0)//size not empty
+         {
+             
+            while(key.next!=null)
+            {
+                if(key.next.element.compareTo(word)==0)
+                    return i;
+                i++;
+                key=key.next;
+                //if(key.next.element.compareTo(word)==0)
+                //return i;
+            }
+         }
+         //else {
+             return -1;
+        // }
+         
+     }
+     
+     public String remove(int i) throws IndexOutOfBoundsException//return a removed string//
+     {
+     String result=getWordAt(i);
+     if (i>=size || i<0)
+        throw new ArrayIndexOutOfBoundsException("Invalid operation");//the statement must be same as test file
+
+     else  //i is valid
+         {
+           for(Node<E>p=head;p.next!=null;p=p.next)
+            {
+                if(p.next.element.equals(result))
+                {
+                    p.next=p.next.next;
+                    break;
+                }
+            }
+         }
+         size--;
+         return result;
+     }
+     
+     public void mergeTo(WordLinkedList that)//removes all the words from that WordLinkedList and inserts them in this WordLinkedList.
+     {
+
+        Node p1=head;
+        Node p2=that.head.next;
+        Node p0;
+         
+         while(p1.next!=null && p2!=null)
+         {
+             //System.out.println(toString());
+             
+             
+             //System.out.println("\n\n");
+             if(p2.element.compareTo(p1.next.element)>0)
+             {
+                 p1=p1.next;
+
+             }
+             
+             
+             else if(p2.element.compareTo(p1.next.element)==0)//which means the element in that list ==the element in this list, so not insert
+             {
+                 p1=p1.next;
+                 that.head.next=p2.next;
+                 p2=p2.next;
+                 that.size--;
+                 
+             }
+             else
+             {
+                 that.head.next=p2.next;
+                 p2.next=p1.next;
+                 p1.next=p2;
+                 p1=p1.next;
+                 p2=that.head.next;
+                 that.size--;
+                 this.size++;
+
+             }
+             
+         }
+         if(that.size!=0)
+         {
+             p1.next=p2;
+             size+=that.size;
+             that.size=0;
+         }
+         that.head.next=null;
+         
+//         if(p2.next!=null)//the last element
+//         {
+//             p1.next=p2.next;
+//             p2.next=null;
+//             size=size+that.size;
+//             that.size=0;
+//         }
+//         /*
+//         this.head=p1.next;
+//         that.head=null;*/
+         ////////////////////////////////////////////////////////////////////////////////////////////
+//         if(that.size==0)
+//         {
+//             return;
+//         }
+//         if(this.size==0)
+//         {
+//             this.size=that.size;
+//             this.head.next=that.head.next;
+//             that.head.next=null;//?
+//             that.size=0;
+//             return;
+//         }
+//         Node q=that.head;
+//         Node p=this.head;
+//         Node temp;
+//         while(q.next!=null)
+//         {
+//             if(q.next.element.compareTo(p.next.element)>0)
+//             {
+//                 p=p.next;
+//                 if(p.next==null)
+//                 {
+//                     p.next=q.next;
+//                     q.next=null;
+//                     this.size+=that.size;
+//                     that.size=0;
+//                     return;
+//                 }
+//             }
+//             else if(q.next.element.compareTo(p.next.element)<0)
+//             {
+//                 temp=q.next;
+//                 q.next=q.next.next;
+//                 that.size--;
+//                 temp.next=p.next;
+//                 p.next=temp;
+//                 this.size++;
+//                 p=temp;
+//             }
+//             else
+//             {
+//                 q.next=q.next.next;
+//                 that.size--;
+//                 p=p.next;
+//             }
+//         }
+     }
+     
+     public String toString()
+     {
+         String newstr="";
+        if(size==0)
+            newstr="empty";
+        else
+        {
+            newstr=new String("");
+            Node<E> p;
+            for(p=head.next;p.next!=null;p=p.next)
+            {
+                newstr=newstr+p.element+"\n";
+            }
+            newstr=newstr+p.element;
+        }
+        
+        return newstr;
+     }
+     
+    
+}
+

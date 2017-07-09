@@ -1,0 +1,263 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package wordlist;
+import java.lang.String;
+
+/**
+ *
+ * @author hanxi
+ */
+public final class WordList {
+
+    /**
+     * @param args the command line arguments
+     */
+    private int size;//the num of words
+    private int cap;//the size of the allocated array of Strings.
+    private String[] b;//=new String [2*cap];
+    
+    //public static void main(String[] args) {
+        // TODO code application logic here
+    //}
+    
+    
+    public WordList(int capacity)
+    {
+       // int i=0;
+        b=new String[capacity];   //must be b array to aviod NullPointException   
+        cap=capacity;
+        size=0;
+        
+
+    }
+    
+    public WordList(String[] arrayOfWords)
+    {
+        cap=2*arrayOfWords.length;
+        b=new String[cap];//twice of arrayofwords.length
+        size=1;//to be empty
+        b[0]=arrayOfWords[0];
+        for(int i=1;i<arrayOfWords.length;i++)
+        {
+            this.insert(arrayOfWords[i]);
+        }
+        
+    }
+    //-----------------------------------------------------WordList methods--------------------------------------------------------
+    public int getSize()
+    {
+        return size;//?
+    }
+    public int getCapacity()
+    {
+        return cap;
+    }
+    
+    public String getWordAt(int i) throws ArrayIndexOutOfBoundsException///////////////
+    {
+       if(i>=size || i<0)
+       {
+            throw new ArrayIndexOutOfBoundsException("Invalid operation");//the statement must be same as test file
+           
+       }
+       else
+           return (b[i]);
+          
+       
+    }
+    
+    public void insert(String newword)
+    {
+        //String []temp=new String [2*cap];//twice as old string
+        
+        int i,j,k;
+        int start=1;//an activate button 
+        for(i=0;i<size;i++)//check if it is exist
+        {
+            if(b[i].compareTo(newword)==0)
+            {
+                start=0;
+            }
+        }
+        
+        if(start==1)
+        {
+            if(size==cap)
+            {
+                cap=cap*2;
+                String[] temp=new String[cap];
+                for(int z=0;z<size;z++)//the string b become double cap
+                {
+                    temp[z]=b[z];
+                }
+                b=temp;
+            }
+            for(k=size-1;k>=0;k--)//a b c f d
+            {
+                if(newword.compareTo(b[k])<0)//compareto is a.compareto(b)=a-b
+                {
+                    b[k+1]=b[k];
+                    
+                }
+                else
+                    break;
+            }
+             size++;
+            b[k+1]=newword;
+           
+            
+            }
+        
+         }
+   // }
+    
+    public int find(String word)
+    {
+        int high=size-1;
+        int low=0;
+        
+//        for(int i=0;i<size;i++)
+//        {
+//            if(word.compareTo(b[i])!=0)
+//                return -1;
+//        }
+        
+        while(high>=low)
+        {
+            int mid=(high+low)/2;
+            if(word.compareTo(b[mid])<0)
+            {
+                high=mid-1;              
+            }
+            if(word.compareTo(b[mid])>0)
+            {
+                low=mid+1;
+            }
+            if(word.compareTo(b[mid])==0)
+            {
+                return mid;
+            }
+        }
+        
+        return -1;
+    }
+    
+    public void remove(String word)
+    {
+        int index=this.find(word);//find the index of the word
+ 
+        if(index!=-1)//we find the word
+        { 
+           
+            size = size-1;
+            for(int i=index;i<=size;i++)
+           {
+                b[i]=b[i+1];
+                //continue;
+                
+           }      
+        }
+        else
+        {System.out.println("word not found");}
+        
+    }
+
+    public WordList sublist (char init, char fin)//check whose 1st letter in the range of init and fin, inclusive
+    {
+        
+        int i=0,m=0;
+        for(i=0;i<size;i++){
+          if((int)(b[i].charAt(0)) >=init &&(int)(b[i].charAt(0)) <=fin)//why have int here
+              m++;//count the size, m is the size, can be changed
+              }
+        
+        WordList sub=new WordList(2*m);//twice as old string,initalize
+        //sub=null;
+        i=0;
+       while(i<=size-1)
+       {
+            if((int)(b[i].charAt(0)) >=init &&(int)(b[i].charAt(0)) <=fin)//why have int here
+            {
+              sub.insert(b[i]);
+            }  
+            i++;
+       }
+        return sub;
+    }
+    
+    
+    public int countInRange(char init, char fin)
+    {
+        int i,j;
+        int pos1,pos2;
+        int low=0,mid;
+        int high=size-1;
+        int count;
+        
+        
+        
+     ///--------------------find init
+        while(high>=low)//no "="??
+        {
+            mid=(high+low)/2;
+            if(init <= b[mid].charAt(0))
+            {
+                high=mid-1;              
+            }
+            else//init >b[mid].charAt(0)
+            {
+                low=mid+1;
+            }
+ 
+        }
+        pos1=low;
+       ////----------------------------------------------find fin 
+        low=0;
+        high=size-1;//re-define the low and high cuz we already used them before
+         while(high>=low)
+        {
+           
+            mid=(high+low)/2;
+            if(fin < b[mid].charAt(0))
+            {
+                high=mid-1;              
+            }
+            else
+            {
+                low=mid+1;
+            }
+ 
+        }
+        pos2=high;
+        
+        count=pos2-pos1+1;
+        return count;
+        
+        
+        }
+        
+       
+        
+        
+        
+    
+    
+    
+    public String toString()
+    {       
+        String newstr="";
+        if(size==0)
+            newstr="empty";
+        else
+            newstr=b[0];
+            for(int i=1;i<size;i++)
+            {
+             newstr=newstr+"\n"+b[i];
+             
+            }
+        return newstr;
+    }
+}
